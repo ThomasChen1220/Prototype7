@@ -7,7 +7,7 @@ public class MovingSphere : MonoBehaviour
     float maxSpeed = 10f;
 
     [SerializeField, Range(0f, 100f)]
-    float maxAcceleration = 10f, maxAirAcceleration = 1f;
+    float maxAirAcceleration = 1f;
 
     [SerializeField, Range(0f, 10f)]
     float jumpHeight = 2f;
@@ -26,6 +26,7 @@ public class MovingSphere : MonoBehaviour
     Vector3 velocity, desiredVelocity;
 
     bool desiredJump;
+    
 
     int groundContactCount;
 
@@ -41,12 +42,22 @@ public class MovingSphere : MonoBehaviour
 
     //for cam
     public Transform camFollow;
+    [Header ("shooting")]
+    public Transform shootPoint;
+    public GameObject bullet;
+    [Range(0, 10)]
+    public int bulletPerSecond=4;
+    
+    private int desiredShoot;
+    private float lastShot;
+    private float shotInterval => 1f /bulletPerSecond;
 
     void OnValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
         anim = GetComponentInChildren<Animator>();
         sprite = transform.Find("Sprites");
+        lastShot = 0;
     }
 
     void Awake()
@@ -57,7 +68,7 @@ public class MovingSphere : MonoBehaviour
 
     void Update()
     {
-        float playerInput = Input.GetAxis("Horizontal");
+        float playerInput = Input.GetAxisRaw("Horizontal");
         desiredVelocity =
             new Vector3(playerInput, 0f,0f) * maxSpeed;
 
@@ -65,14 +76,19 @@ public class MovingSphere : MonoBehaviour
         Debug.Log(velocity);
         if (velocity.x < -0.01f)
         {
-            sprite.localScale = new Vector3(-1, 1);
+            transform.localScale = new Vector3(-1, 1);
         }
         else if (velocity.x > 0.01f)
         {
-            sprite.localScale = new Vector3(1, 1);
+            transform.localScale = new Vector3(1, 1);
         }
 
-        desiredJump |= Input.GetButtonDown("Jump");
+        desiredJump |= Input.GetButtonDown("Jump")||Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.UpArrow);
+        if((lastShot+shotInterval)<Time.time && Input.GetMouseButton(0))
+        {
+            desiredShoot++;
+            lastShot = Time.time;
+        }
 
         //update cam follow
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, jumpHeight*2, ground);
@@ -96,7 +112,12 @@ public class MovingSphere : MonoBehaviour
             desiredJump = false;
             Jump();
         }
-
+        while (desiredShoot > 0)
+        {
+            var b = Instantiate(bullet, shootPoint.position, Quaternion.identity);
+            b.transform.localScale = transform.localScale;
+            desiredShoot--;
+        }
         body.velocity = velocity;
         ClearState();
     }
@@ -114,12 +135,20 @@ public class MovingSphere : MonoBehaviour
     void AdjustVelocity()
     {
 
-        float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
+        float acceleration = OnGround ? -1 : maxAirAcceleration;
         float maxSpeedChange = acceleration * Time.deltaTime;
 
-        float newX =
+        float newX;
+        if (acceleration != -1)
+        {
+            newX =
             Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-
+        }
+        else
+        {
+            newX = desiredVelocity.x;
+        }
+        
         velocity.x = newX;
     }
 
