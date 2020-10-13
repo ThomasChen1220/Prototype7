@@ -56,6 +56,8 @@ public class MovingSphere : MonoBehaviour
     private float lastShot;
     private float shotInterval => 1f /bulletPerSecond;
 
+	private AudioManager _audio;
+
     void OnValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
@@ -63,6 +65,7 @@ public class MovingSphere : MonoBehaviour
         sprite = transform.Find("Sprites");
         lastShot = 0;
         shootEffect = shootPoint.GetComponent<ShootEffect>();
+		_audio = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
     }
 
     void Awake()
@@ -95,6 +98,8 @@ public class MovingSphere : MonoBehaviour
         if((lastShot+shotInterval)<Time.time && Input.GetMouseButton(0))
         {
             GameObject b = Instantiate(bullet, shootPoint.position, Quaternion.identity) as GameObject;
+			// play sound of laser
+			_audio.PlayGunshot();
             if (transform.localScale.x < 0)
             {
                 Projectile p = b.GetComponent<Projectile>();
@@ -185,6 +190,8 @@ public class MovingSphere : MonoBehaviour
                 jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
             }
             velocity += Vector3.up * jumpSpeed;
+			// play jump sound
+			_audio.PlayJump();
         }
     }
 
