@@ -215,7 +215,7 @@ MonoBehaviour:
   - {x: -0.19404864, y: 0.06457918, z: 0}
   m_ShapePathHash: -1146713015
   m_Mesh: {fileID: 0}
-  m_InstanceId: -187062
+  m_InstanceId: -1258
 --- !u!1 &6890040704789939018
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +293,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2560
   camFollow: {fileID: 1997594094}
+  shootPoint: {fileID: 0}
+  bullet: {fileID: 8483446317844203994, guid: 8e190e37b0d66c04b88764eeddf38bc6, type: 3}
+  bulletPerSecond: 12
 --- !u!61 &6890040704789939030
 BoxCollider2D:
   m_ObjectHideFlags: 0

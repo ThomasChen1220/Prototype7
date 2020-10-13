@@ -5,14 +5,19 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed;
+    public Vector3 direction;
 
     Rigidbody2D rb;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.velocity = transform.right * speed;
-        Destroy(gameObject, 5f);
+        direction = transform.right;
+        Destroy(gameObject, 4f);
+    }
+    private void Update()
+    {
+        rb.velocity = direction * speed;
     }
     private void ApplyDamage(Collider2D collision)
     {

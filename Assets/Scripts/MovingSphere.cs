@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 
 public class MovingSphere : MonoBehaviour
 {
@@ -40,15 +41,18 @@ public class MovingSphere : MonoBehaviour
     Animator anim;
    
 
-    //for cam
+    [Header("cam")]
     public Transform camFollow;
+
     [Header ("shooting")]
     public Transform shootPoint;
+    ShootEffect shootEffect;
     public GameObject bullet;
-    [Range(0, 10)]
+    [Range(0, 25)]
     public int bulletPerSecond=4;
-    
-    private int desiredShoot;
+
+    public KickBack mGun;
+
     private float lastShot;
     private float shotInterval => 1f /bulletPerSecond;
 
@@ -58,6 +62,7 @@ public class MovingSphere : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         sprite = transform.Find("Sprites");
         lastShot = 0;
+        shootEffect = shootPoint.GetComponent<ShootEffect>();
     }
 
     void Awake()
@@ -73,7 +78,7 @@ public class MovingSphere : MonoBehaviour
             new Vector3(playerInput, 0f,0f) * maxSpeed;
 
         anim.SetFloat("horizontal", Mathf.Abs(velocity.x));
-        Debug.Log(velocity);
+
         if (velocity.x < -0.01f)
         {
             transform.localScale = new Vector3(-1, 1);
@@ -83,10 +88,26 @@ public class MovingSphere : MonoBehaviour
             transform.localScale = new Vector3(1, 1);
         }
 
+        //update jump
         desiredJump |= Input.GetButtonDown("Jump")||Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.UpArrow);
+
+        //update shooting
         if((lastShot+shotInterval)<Time.time && Input.GetMouseButton(0))
         {
-            desiredShoot++;
+            GameObject b = Instantiate(bullet, shootPoint.position, Quaternion.identity) as GameObject;
+            if (transform.localScale.x < 0)
+            {
+                Projectile p = b.GetComponent<Projectile>();
+                p.direction.x = -1;
+
+                mGun.Kick(-1);
+            }
+            else
+            {
+                mGun.Kick();
+            }
+            PlayShootEffect();
+
             lastShot = Time.time;
         }
 
@@ -101,6 +122,12 @@ public class MovingSphere : MonoBehaviour
             camFollow.position = transform.position;
         }
     }
+
+    void PlayShootEffect()
+    {
+        shootEffect.Play();
+    }
+    
     
     void FixedUpdate()
     {
@@ -111,12 +138,6 @@ public class MovingSphere : MonoBehaviour
         {
             desiredJump = false;
             Jump();
-        }
-        while (desiredShoot > 0)
-        {
-            var b = Instantiate(bullet, shootPoint.position, Quaternion.identity);
-            b.transform.localScale = transform.localScale;
-            desiredShoot--;
         }
         body.velocity = velocity;
         ClearState();
