@@ -10,7 +10,9 @@ public class AudioManager : MonoBehaviour {
 
 	public AudioClip[] Gunshots;
 
-	public AudioClip[] Impacts;
+	public AudioClip[] BulletImpacts;
+
+	public AudioClip[] CrateImpacts;
 
 	public AudioClip[] BodySplats;
 	
@@ -41,8 +43,12 @@ public class AudioManager : MonoBehaviour {
 		_player.PlayOneShot(Gunshots[Random.Range(0, Gunshots.Length)]);
 	}
 
-	public void PlayImpact() {
-		_player.PlayOneShot(Impacts[Random.Range(0, Impacts.Length)]);
+	public void PlayCrateImpacts() {
+		_player.PlayOneShot(CrateImpacts[Random.Range(0, CrateImpacts.Length)]);
+	}
+
+	public void PlayBulletImpacts() {
+		_player.PlayOneShot(BulletImpacts[Random.Range(0, BulletImpacts.Length)]);
 	}
 
 	public void PlayBodySplat() {

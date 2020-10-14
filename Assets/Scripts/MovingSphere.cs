@@ -95,13 +95,13 @@ public class MovingSphere : MonoBehaviour
 		// footstep sounds
 		if ((anim.GetFloat("horizontal") > 0.01f)  && (OnGround)) {
 			_footstepTimer += anim.GetFloat("horizontal") * Time.deltaTime;
-			if (_footstepTimer > 1.1f) {
+			if (_footstepTimer > 1f) {
 				_audio.PlayFootstep();
 				_footstepTimer = 0f;
 			}
 		}
 		else {
-			_footstepTimer = 0f;
+			_footstepTimer = 1f;
 		}
 
         //update jump

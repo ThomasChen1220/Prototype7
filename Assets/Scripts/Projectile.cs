@@ -19,12 +19,20 @@ public class Projectile : MonoBehaviour
     {
         rb.velocity = direction * speed;
     }
-    private void ApplyDamage(Collider2D collision)
+    /*private void ApplyDamage(Collider2D collider)
     {
 
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
+    }*/
+	private void ApplyDamage(Collision2D collision) {
+
+	}
+	/*private void OnTriggerEnter2D(Collider2D collision)
     {
         ApplyDamage(collision);
-    }
+		Destroy(gameObject);
+    }*/
+	private void OnCollisionEnter2D(Collision2D collision) {
+		ApplyDamage(collision);
+		Destroy(gameObject);
+	}
 }
