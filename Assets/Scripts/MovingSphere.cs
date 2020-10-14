@@ -57,6 +57,7 @@ public class MovingSphere : MonoBehaviour
     private float shotInterval => 1f /bulletPerSecond;
 
 	private AudioManager _audio;
+	private float _footstepTimer = 0f;
 
     void OnValidate()
     {
@@ -90,6 +91,18 @@ public class MovingSphere : MonoBehaviour
         {
             transform.localScale = new Vector3(1, 1);
         }
+
+		// footstep sounds
+		if ((anim.GetFloat("horizontal") > 0.01f)  && (OnGround)) {
+			_footstepTimer += anim.GetFloat("horizontal") * Time.deltaTime;
+			if (_footstepTimer > 1.1f) {
+				_audio.PlayFootstep();
+				_footstepTimer = 0f;
+			}
+		}
+		else {
+			_footstepTimer = 0f;
+		}
 
         //update jump
         desiredJump |= Input.GetButtonDown("Jump")||Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.UpArrow);
