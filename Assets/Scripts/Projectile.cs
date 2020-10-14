@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     public float speed;
     public Vector3 direction;
+    public GameObject vfx;
 
     Rigidbody2D rb;
     // Start is called before the first frame update
@@ -19,18 +20,17 @@ public class Projectile : MonoBehaviour
     {
         rb.velocity = direction * speed;
     }
-    /*private void ApplyDamage(Collider2D collider)
+    private void OnDestroy()
     {
-
-    }*/
-	private void ApplyDamage(Collision2D collision) {
-
+        Instantiate(vfx, transform.position, Quaternion.identity);
+    }
+    private void ApplyDamage(Collision2D collision) {
+        var c = collision.transform.GetComponent<Crate>();
+        if (c != null)
+        {
+            c.Damage();
+        }
 	}
-	/*private void OnTriggerEnter2D(Collider2D collision)
-    {
-        ApplyDamage(collision);
-		Destroy(gameObject);
-    }*/
 	private void OnCollisionEnter2D(Collision2D collision) {
 		ApplyDamage(collision);
 		Destroy(gameObject);
