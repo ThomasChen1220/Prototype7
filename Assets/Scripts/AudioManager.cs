@@ -19,7 +19,9 @@ public class AudioManager : MonoBehaviour {
 	public AudioClip AttackAlert;
 
 	public AudioClip FleeAlert;
-	
+
+	public AudioClip CrateBreak;
+
 	private AudioSource _player;
 
 	private AudioReverbFilter _reverb;
@@ -71,5 +73,9 @@ public class AudioManager : MonoBehaviour {
 
 	public void PlayFleeAlert() {
 		_player.PlayOneShot(FleeAlert);
+	}
+
+	public void PlayCrateBreak() {
+		_player.PlayOneShot(CrateBreak);
 	}
 }

@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - Crate
   - FollowCam
+  - Cursor
   layers:
   - Default
   - TransparentFX

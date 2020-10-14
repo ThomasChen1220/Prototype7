@@ -59,6 +59,8 @@ public class MovingSphere : MonoBehaviour
 	private AudioManager _audio;
 	private float _footstepTimer = 0f;
 
+	private GameObject _cursor;
+
     void OnValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
@@ -67,6 +69,7 @@ public class MovingSphere : MonoBehaviour
         lastShot = 0;
         shootEffect = shootPoint.GetComponent<ShootEffect>();
 		_audio = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
+		_cursor = GameObject.FindGameObjectWithTag("Cursor");
     }
 
     void Awake()
@@ -107,24 +110,28 @@ public class MovingSphere : MonoBehaviour
         //update jump
         desiredJump |= Input.GetButtonDown("Jump")||Input.GetKeyDown(KeyCode.W)||Input.GetKeyDown(KeyCode.UpArrow);
 
-        //update shooting
-        if((lastShot+shotInterval)<Time.time && Input.GetMouseButton(0))
+		// update aim
+		Vector3 dir = _cursor.transform.position - transform.position;
+		dir.Normalize();
+		mGun.transform.right = dir;
+		Vector2 gunScale = Vector2.one;
+		if (Mathf.Abs(Vector3.Angle(Vector3.right, dir)) > 90f)
+			gunScale.y = -1;
+		mGun.transform.localScale = gunScale;
+
+		//update shooting
+		if ((lastShot+shotInterval)<Time.time && Input.GetMouseButton(0))
         {
-            GameObject b = Instantiate(bullet, shootPoint.position, Quaternion.identity) as GameObject;
+            GameObject b = Instantiate(bullet, shootPoint.position, mGun.transform.rotation) as GameObject;
 			// play sound of laser
 			_audio.PlayGunshot();
-            if (transform.localScale.x < 0)
-            {
-                Projectile p = b.GetComponent<Projectile>();
-                p.direction.x = -1;
+			
+			if (mGun.transform.localScale.y > 0)
+				mGun.Kick();
+			else
+				mGun.Kick(-1);
 
-                mGun.Kick(-1);
-            }
-            else
-            {
-                mGun.Kick();
-            }
-            PlayShootEffect();
+			PlayShootEffect();
 
             lastShot = Time.time;
         }

@@ -23,7 +23,5 @@ public class SmoothFollow : MonoBehaviour
         var temp = transform.position;
         temp.x = targetPosition.x;
         transform.position = temp;
-        
-        transform.localScale = target.localScale;
     }
 }
