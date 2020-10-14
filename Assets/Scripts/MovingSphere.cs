@@ -42,7 +42,7 @@ public class MovingSphere : MonoBehaviour
    
 
     [Header("cam")]
-    public Transform camFollow;
+    public Transform camFollow = null;
 
     [Header ("shooting")]
     public Transform shootPoint;

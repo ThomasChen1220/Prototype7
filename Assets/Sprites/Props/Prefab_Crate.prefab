@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7331364182340783455}
   m_Layer: 11
   m_Name: Prefab_Crate
-  m_TagString: Untagged
+  m_TagString: Crate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -152406
+  m_InstanceId: -376740
 --- !u!114 &7331364182340783455
 MonoBehaviour:
   m_ObjectHideFlags: 0

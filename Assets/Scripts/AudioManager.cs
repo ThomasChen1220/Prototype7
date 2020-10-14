@@ -15,6 +15,10 @@ public class AudioManager : MonoBehaviour {
 	public AudioClip[] CrateImpacts;
 
 	public AudioClip[] BodySplats;
+
+	public AudioClip AttackAlert;
+
+	public AudioClip FleeAlert;
 	
 	private AudioSource _player;
 
@@ -59,5 +63,13 @@ public class AudioManager : MonoBehaviour {
 
 	public void PlayJump() {
 		_player.PlayOneShot(Jumps[0]);
+	}
+
+	public void PlayAttackAlert() {
+		_player.PlayOneShot(AttackAlert);
+	}
+
+	public void PlayFleeAlert() {
+		_player.PlayOneShot(FleeAlert);
 	}
 }
